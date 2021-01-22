@@ -42,7 +42,6 @@ class SummaryVisitor:
 
     def generic_visit(self, summary):
         """ Called if no explicit visitor function exists for a node """
-        print(type(summary))
         if isinstance(summary, Summary):
             raise Warning(f'No method have been define for the class {summary.__class__.__name__}')
         else:

@@ -42,7 +42,6 @@ def write_json(filename, summary):
         :param summary: summary exported from a SummaryBuilder
         :type summary: dict
     """
-    print(summary)
     with open(filename, 'w') as file:
         file.write(dumps(summary, indent=4))
 
@@ -65,7 +64,6 @@ def select_method(summary, predicate, **kwargs):
     
     if 'excluded_attrs' not in kwargs:
         kwargs['excluded_attrs'] = []
-    print(kwargs['excluded_attrs'])
     # Parameters needed by the predicate
     needed_params = [param.name for param in inspect.signature(predicate).parameters.values()]
 
@@ -90,5 +88,4 @@ def select_method(summary, predicate, **kwargs):
     # Parameters `key` and `value` will be processed afterwards in the function `method`
     params = [kwargs[param] for param in needed_params if param not in ('key', 'value')]
     tmp  = method(summary, predicate, params)
-    print("TMP", tmp)
     return tmp

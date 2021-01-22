@@ -32,7 +32,6 @@ class BodyVisitor(ast.NodeVisitor):
 
         # if the methods has not been overwitten (no `arg` parameter)
         flag = len(inspect.signature(visitor).parameters.values()) != 2
-        # print(inspect.signature(visitor).parameters.values())
 
         if flag: # only pass `node` as parameter for the method call
             parameters = parameters[:1]
@@ -125,7 +124,6 @@ class BodyVisitor(ast.NodeVisitor):
             - elts list(object): content of the tuple 
             - ctx (?)
         """
-        print(arg)
         _increase_counter(arg, node.__class__.__name__)
         return [self.visit(element, arg) for element in node.elts]
 
