@@ -6,8 +6,9 @@ from pyparser.summary.minor_summaries import (
 )
 
 class BodySummary(Summary):
-    def __init__(self, summary_list):
+    def __init__(self, summary_list, counters=None):
         self.summary_list = summary_list
+        self.counters = counters
 
         self.functions = []
         self.fors = []

@@ -42,10 +42,11 @@ class SummaryVisitor:
 
     def generic_visit(self, summary):
         """ Called if no explicit visitor function exists for a node """
+        print(type(summary))
         if isinstance(summary, Summary):
             raise Warning(f'No method have been define for the class {summary.__class__.__name__}')
         else:
-            raise TypeError('Summary or child class object expected')
+            raise TypeError(f'Summary or child class object expected, {summary.__class__.__name__} found')
     
     def _get_parameters(self, name):
         return self.parameters[name] if name in self.parameters else None
@@ -63,7 +64,6 @@ class SummaryVisitor:
             except KeyError: # or incomplete
                 field_map[field] = self.defaults[field]
 
-        print(field_map)
         return summary.build(**field_map)
     
     def _safe_build(self, summary, output, attr):
@@ -71,22 +71,26 @@ class SummaryVisitor:
             attribute = getattr(summary, attr)
             output[attr] = [self.visit(field) for field in attribute] \
                 if isinstance(attribute, Iterable) else self.visit(attribute)
+            
+    def _visit_body(self, summary):
+        """ Builds the basic summary and generates the body's summary """
+        result  = self._auto_build(summary)
+        self._safe_build(summary, result, 'body')
+        return result
     
     def visit_bodysummary(self, summary):
         result = self._auto_build(summary)
         self._safe_build(summary, result, 'functions')
         self._safe_build(summary, result, 'fors')
+        self._safe_build(summary, result, 'whiles')
 
         return result
     
     def visit_functionsummary(self, summary):
-        result  = self._auto_build(summary)
-        self._safe_build(summary, result, 'body')
-
-        return result
+        return self._visit_body(summary)
     
     def visit_forsummary(self, summary):
-        result = self._auto_build(summary)
-        self._safe_build(summary, result, 'body')
-
-        return result
+        return self._visit_body(summary)
+    
+    def visit_whilesummary(self, summary):
+        return self._visit_body(summary)

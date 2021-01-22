@@ -1,6 +1,7 @@
 import ast
 import os
 
+
 def ast_from_string(string):
     """
         Parses a given string and returns its AST
