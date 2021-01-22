@@ -24,15 +24,3 @@ class WhileSummary(Summary):
 
     def __repr__(self):
         return f'WhileSummary[test: {self.test}]'
-    
-
-class AssignSummary(Summary):
-    def __init__(self, targets, value):
-        self.targets = targets
-        self.value = value 
-    
-    def __str__(self):
-        return f'AssignSummary[targets: {self.targets}, value: {self.value}]'
-
-    def __repr__(self):
-        return f'AssignSummary[targets: {self.targets}]'

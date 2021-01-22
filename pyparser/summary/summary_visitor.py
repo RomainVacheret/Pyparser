@@ -83,6 +83,8 @@ class SummaryVisitor:
         self._safe_build(summary, result, 'fors')
         self._safe_build(summary, result, 'whiles')
         self._safe_build(summary, result, 'assigns')
+        self._safe_build(summary, result, 'augassigns')
+        self._safe_build(summary, result, 'calls')
 
         return result
     
@@ -96,4 +98,10 @@ class SummaryVisitor:
         return self._visit_body(summary)
     
     def visit_assignsummary(self, summary):
+        return self._auto_build(summary)
+
+    def visit_augassignsummary(self, summary):
+        return self._auto_build(summary)
+    
+    def visit_callsummary(self, summary):
         return self._auto_build(summary)

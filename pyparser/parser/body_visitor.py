@@ -3,10 +3,14 @@ import inspect
 
 from pyparser.summary.body_summary import BodySummary
 from pyparser.summary.function_summary import FunctionSummary
+from pyparser.summary.operation_summaries import (
+    AssignSummary,
+    AugAssignSummary,
+    CallSummary
+)
 from pyparser.summary.minor_summaries import (
     ForSummary,
-    WhileSummary,
-    AssignSummary
+    WhileSummary
 )
 
 
@@ -118,6 +122,7 @@ class BodyVisitor(ast.NodeVisitor):
         return WhileSummary(test, body_summary)
     
     # ----- Data structures ----- # 
+
     def visit_Tuple(self, node, arg=None):
         """
            Node's fields:
@@ -167,6 +172,36 @@ class BodyVisitor(ast.NodeVisitor):
         targets = [self.visit(target, arg) for target in node.targets]
         value = self.visit(node.value, arg)
         return AssignSummary(targets, value)
+    
+    def visit_AugAssign(self, node, arg=None):
+        """
+           Node's fields:
+            - target ast.Name: the name of the target variable
+            - op: used operator
+            - value ast.?: value that will affect the target using the operator
+        """
+        target = self.visit(node.target, arg)
+        value = self.visit(node.value, arg)
+        op = node.op.__class__.__name__
+        _increase_counter(arg, op)
+        return AugAssignSummary(target, value, op)
+    
+    def visit_Call(self, node, arg=None):
+        """
+           Node's fields:
+            - func ast.Name or ast.Attribute: function's name # ! Attribute case !
+            - args list(ast.?): arguments passed to the function (des not include keywords)
+            - keywords list(ast.keyword): values given using the name of the parameter
+        """
+        func = self.visit(node.func, arg)
+        args = [self.visit(a, arg) for a in node.args]
+        keywords = None # TODO -> make visit_keyword (arg: str, val: ast.?)
+        return CallSummary(func, args, keywords) 
+    
+    def visit_Expr(self, node):
+        """ Node's field: value: ast.? # ? ast.Call ?"""
+        return self.visit(node.value)
+
     # ----- XX -----
 
     def visit_Name(self, node: ast.Name, arg=None):

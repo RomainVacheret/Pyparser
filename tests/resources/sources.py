@@ -22,3 +22,5 @@ DICT_COMP_EXAMPLE = 'x = {i: i ** 2 for i in range(9)}'
 
 # Calls and expressions
 CALL_EXAMPLE = 'print(1)'
+CALL_KEYWORD_EXAMPLE = 'print(1, end=" ")'
+AUGASSIGN_EXAMPLE = 'x += 2'
