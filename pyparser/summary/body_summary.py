@@ -2,7 +2,8 @@ from pyparser.summary.summary import Summary
 from pyparser.summary.function_summary import FunctionSummary
 from pyparser.summary.minor_summaries import (
     ForSummary,
-    WhileSummary
+    WhileSummary,
+    AssignSummary
 )
 
 class BodySummary(Summary):
@@ -13,6 +14,7 @@ class BodySummary(Summary):
         self.functions = []
         self.fors = []
         self.whiles = []
+        self.assigns = []
 
         self._sort_list()
     
@@ -25,6 +27,8 @@ class BodySummary(Summary):
                 self.fors.append(summary)
             elif isinstance(summary, WhileSummary):
                 self.whiles.append(summary)
+            elif isinstance(summary, AssignSummary):
+                self.assigns.append(summary)
         
     def __str__(self):
         return f'BodySummary[functions: {self.summary_list}]'

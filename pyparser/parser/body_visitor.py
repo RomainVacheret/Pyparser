@@ -5,7 +5,8 @@ from pyparser.summary.body_summary import BodySummary
 from pyparser.summary.function_summary import FunctionSummary
 from pyparser.summary.minor_summaries import (
     ForSummary,
-    WhileSummary
+    WhileSummary,
+    AssignSummary
 )
 
 
@@ -46,6 +47,7 @@ class BodyVisitor(ast.NodeVisitor):
         """
         if arg is None:
             arg = {}
+            
         return BodySummary([self.visit(inner_node, arg) for inner_node in node.body], arg)
 
     def visit_Module(self, node: ast.Module, arg=None): 
@@ -123,6 +125,7 @@ class BodyVisitor(ast.NodeVisitor):
             - elts list(object): content of the tuple 
             - ctx (?)
         """
+        print(arg)
         _increase_counter(arg, node.__class__.__name__)
         return [self.visit(element, arg) for element in node.elts]
 
@@ -154,6 +157,18 @@ class BodyVisitor(ast.NodeVisitor):
         values = [self.visit(value, arg) for value in node.values]
         return list(map(list, zip(keys, values)))
     
+    # ----- Expressions -----
+
+    def visit_Assign(self, node, arg=None):
+        """
+           Node's fields:
+            - targets list(ast.?): 
+            - value ast.?:  
+            - type_comment (?)
+        """
+        targets = [self.visit(target, arg) for target in node.targets]
+        value = self.visit(node.value, arg)
+        return AssignSummary(targets, value)
     # ----- XX -----
 
     def visit_Name(self, node: ast.Name, arg=None):

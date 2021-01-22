@@ -83,6 +83,7 @@ class SummaryVisitor:
         self._safe_build(summary, result, 'functions')
         self._safe_build(summary, result, 'fors')
         self._safe_build(summary, result, 'whiles')
+        self._safe_build(summary, result, 'assigns')
 
         return result
     
@@ -94,3 +95,6 @@ class SummaryVisitor:
     
     def visit_whilesummary(self, summary):
         return self._visit_body(summary)
+    
+    def visit_assignsummary(self, summary):
+        return self._auto_build(summary)
