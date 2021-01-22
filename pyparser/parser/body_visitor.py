@@ -35,7 +35,6 @@ class BodyVisitor(ast.NodeVisitor):
 
         if flag: # only pass `node` as parameter for the method call
             parameters = parameters[:1]
-            print("here")
         
         return visitor(*parameters)
 
